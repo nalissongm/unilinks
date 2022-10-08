@@ -1,0 +1,90 @@
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  form {
+    flex-direction: column;
+    max-width: 41.375rem;
+    width: 100%;
+    margin: 11.0625rem 1rem 0;
+
+    .wrapperButtons {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center ;
+      
+      .copyBtt {
+        margin-top: 2.25rem;
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        margin-right: 3.375rem;
+        font-size: 1.125rem;
+        color: var(--gray-800);
+        
+        svg {
+          margin-right: 0.625rem;
+        }
+      }
+      
+      .saveBtt {
+        align-self: flex-end;
+        
+        margin-top: 2.25rem;
+        width: 12.5rem;
+        height: 3.75rem;
+        background-color: var(--highlight);
+        border: none;
+        border-radius: 0.625rem;
+  
+        color: var(--white);
+        font-size: 1.5rem;
+        font-weight: 500;
+  
+        &:disabled {
+          cursor: auto;
+          background-color: var(--highlight-disabled);
+        }  
+     }  
+    }
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.3125rem;
+  margin-bottom: 2.8125rem;
+
+  label {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--gray-325);
+    margin-left: 1rem; 
+  }
+
+  input {
+    height: 3.75rem;
+    border-radius: 0.625rem;
+    border: 2px solid var(--gray-300);
+    background-color: transparent;
+
+    font-size: 1.5rem;
+    padding: 0 1rem;
+
+    &:focus {
+      outline: none;
+      border: 2px solid var(--highlight);
+
+      + label {
+        color: var(--highlight) !important;
+      }
+    }
+  }
+}
+
+.copied {
+  color: var(--green) !important;
+}
