@@ -24,7 +24,7 @@ export default function LinkEdit({ link }: LinkEditProps) {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { data } = await api.patch(`links/${link.id}`, {
+    const { data } = await api.patch(`/links/${link.id}`, {
       title: titleField,
       url: urlField,
     });
