@@ -38,7 +38,7 @@ export default function LinkEdit({ link }: LinkEditProps) {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText(`http://localhost:3000/${link.id}`);
+    navigator.clipboard.writeText(`${process.env.PRODUCTION_URL}/${link.id}`);
 
     setIsCopy(true);
   }
@@ -113,7 +113,7 @@ export default function LinkEdit({ link }: LinkEditProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await api.get("links/229e55ac-f0f9-4520-a63a-9991830c64fd");
+  const { data } = await api.get("/links/229e55ac-f0f9-4520-a63a-9991830c64fd");
 
   const link = {
     id: data.id,

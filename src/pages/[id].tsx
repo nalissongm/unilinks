@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const id = params!.id;
 
   try {
-    const response = await api.get(`links/${id}`);
+    const response = await api.get(`/links/${id}`);
     const redirectTo = response.data.url;
 
     return {
