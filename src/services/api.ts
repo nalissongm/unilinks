@@ -3,6 +3,6 @@ import axios from "axios";
 export const api = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/api"
-      : `${process.env.PRODUCTION_URL}/api`,
+      ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}/api`
+      : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}/api`,
 });

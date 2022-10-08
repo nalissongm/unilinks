@@ -4,7 +4,7 @@ import { FiCheck } from "react-icons/fi";
 
 import styles from "../links/link.module.scss";
 import { api } from "../../services/api";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 
 interface LinkEditProps {
   link: {
@@ -29,6 +29,8 @@ export default function LinkEdit({ link }: LinkEditProps) {
       url: urlField,
     });
 
+    console.log(data);
+
     setDataLink({
       id: link.id,
       title: data.title,
@@ -38,7 +40,9 @@ export default function LinkEdit({ link }: LinkEditProps) {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText(`${process.env.PRODUCTION_URL}/${link.id}`);
+    navigator.clipboard.writeText(
+      `${process.env.NEXT_PUBLIC_PRODUCTION_URL}/${link.id}`
+    );
 
     setIsCopy(true);
   }
