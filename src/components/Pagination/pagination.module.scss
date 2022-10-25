@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  width: 100%;
+
+  & > button, div {
+    display: flex;
+    align-items: center;
+
+    background-color: var(--white);
+    color: var(--black);
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+  }
+
+  & > button {
+    gap: 6px;
+    padding: 7px 14px;
+  }
+
+  div {
+    gap: 12px;
+    padding: 7px 24px;
+
+    button {
+      background-color: transparent;
+      border: none;
+
+    }
+
+    .buttonActive {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 26px;
+      height: 26px;
+      background-color: var(--highlight);
+      border-radius: 50%;
+      color: var(--white)
+    }
+  }
+}
+

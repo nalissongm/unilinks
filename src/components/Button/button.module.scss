@@ -1,0 +1,25 @@
+.button {
+  padding: 12px 30px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.primary {
+  border: 2px solid var(--highlight);
+  background-color: var(--highlight);
+  color: var(--white);
+
+  transition: filter .2s;
+  
+  &:hover {
+    filter: brightness(.90);
+  }
+}
+
+.secondary {
+  border: 2px solid var(--highlight);
+  background-color: none;
+  color: var(--highlight);
+  box-sizing: border-box;
+}

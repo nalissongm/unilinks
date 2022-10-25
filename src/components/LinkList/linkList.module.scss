@@ -1,0 +1,30 @@
+.contentList {
+  list-style: none;
+  li {
+    background-color: var(--white);
+    padding: 19px 34px;
+
+    a {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--black);
+    }
+  }
+}
+
+.firstLink {
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #35314333;
+}
+
+.lastLink {
+  border-radius: 0 0 4px 4px;
+}
+
+.middleLink {
+  border-bottom: 1px solid #35314333;
+}
+
+.singleLink {
+  border-radius: 4px;
+}
