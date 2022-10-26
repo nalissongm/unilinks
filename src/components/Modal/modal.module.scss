@@ -4,4 +4,32 @@
   height: 100%;
 
   background-color: var(--backdrop);
+  z-index: 1000;
+}
+
+.content {
+  position: fixed;
+  top: 188px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--white);
+  z-index: 1001;
+  
+  border-radius: 4px;
+  padding: 64px 38px 44px;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    
+    width: 400px;
+
+    .wrapperButton {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 24px 0;
+    }
+  }
 }
