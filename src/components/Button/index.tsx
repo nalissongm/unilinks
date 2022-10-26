@@ -1,14 +1,17 @@
+import { ReactNode } from "react";
 import styles from "./button.module.scss";
 
 interface ButtonProps {
-  label: string;
+  children: ReactNode;
   variant?: "primary" | "secondary";
+  type?: "submit" | "button";
   action: () => any;
 }
 
 export function Button({
-  label,
+  children,
   variant = "primary",
+  type = "button",
   action,
 }: ButtonProps): JSX.Element {
   return (
@@ -17,8 +20,9 @@ export function Button({
         variant === "primary" ? styles.primary : styles.secondary
       }`}
       onClick={action}
+      type={type}
     >
-      {label}
+      {children}
     </button>
   );
 }
