@@ -7,6 +7,8 @@ import { useDisclosure } from "../contexts/ModalDisclosureContext";
 import { api } from "../services/api";
 import { useEffect, useState } from "react";
 
+import styles from "../styles/home.module.scss";
+
 type Link = {
   id: string;
   title: string;
@@ -75,8 +77,8 @@ const Home = ({ links }: HomeProps) => {
         title: link.title,
         url:
           process.env.NODE_ENV === "development"
-            ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}links/${link.id}`
-            : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}links/${link.id}`,
+            ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}/links/${link.id}`
+            : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}/links/${link.id}`,
       }));
     }
 
@@ -86,8 +88,8 @@ const Home = ({ links }: HomeProps) => {
       title: link.title,
       url:
         process.env.NODE_ENV === "development"
-          ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}links/${link.id}`
-          : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}links/${link.id}`,
+          ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}/links/${link.id}`
+          : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}/links/${link.id}`,
     }));
   }
 
@@ -144,7 +146,7 @@ const Home = ({ links }: HomeProps) => {
           onStaleData={(isStaleData: boolean) => setIsStaleData(isStaleData)}
         />
       )}
-      <div className="content">
+      <div className={styles.content}>
         <header>
           <h1>Dashboard</h1>
           <Button action={onOpen}>Adicionar link</Button>
@@ -158,12 +160,14 @@ const Home = ({ links }: HomeProps) => {
             <h2>Todos os links</h2>
             <LinkList links={linksPerPage} />
             {links.length > 5 && (
-              <Pagination
-                totalCountOfRegisters={links.length}
-                registerPerPage={5}
-                onPageChange={handlePagination}
-                currentPage={currentPage}
-              />
+              <div className={styles.pagination}>
+                <Pagination
+                  totalCountOfRegisters={links.length}
+                  registerPerPage={5}
+                  onPageChange={handlePagination}
+                  currentPage={currentPage}
+                />
+              </div>
             )}
           </div>
         </main>

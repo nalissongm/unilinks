@@ -4,7 +4,7 @@ import { FiCheck } from "react-icons/fi";
 
 import styles from "../links/link.module.scss";
 import { api } from "../../services/api";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 interface LinkEditProps {
   link: {
@@ -114,8 +114,11 @@ export default function LinkEdit({ link }: LinkEditProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await api.get("/links/229e55ac-f0f9-4520-a63a-9991830c64fd");
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+}: GetServerSidePropsContext) => {
+  const id = params!.id;
+  const { data } = await api.get(`/links/${id}`);
 
   const link = {
     id: data.id,
