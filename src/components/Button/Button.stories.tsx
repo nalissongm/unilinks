@@ -15,13 +15,11 @@ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  label: "Button",
   action: () => console.log("Clicked primary"),
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
-  label: "Button",
   variant: "secondary",
   action: () => console.log("Clicked secondary"),
 };

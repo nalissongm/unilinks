@@ -21,32 +21,30 @@ type ResponseData = {
   data: Link[];
 };
 
+type PickUpTidyDataParams = {
+  data: Array<Link>;
+  orderBy?: "increase" | "decrease";
+  sliceItems?: {
+    start: number;
+    end: number;
+  };
+};
+
 const Home = ({ links }: HomeProps) => {
   const [isStaleData, setIsStaleData] = useState(false);
-  const [recentLinks, setRecentLinks] = useState(() => {
-    return links
-      .sort(
-        (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      )
-      .slice(0, 4)
-      .map((link) => ({
-        title: link.title,
-        url:
-          process.env.NODE_ENV === "development"
-            ? `http://localhost:3000/links/${link.id}`
-            : "",
-      }));
-  });
-  const [allLinks, setAllLinks] = useState(() => {
-    return links.map((link) => ({
-      title: link.title,
-      url:
-        process.env.NODE_ENV === "development"
-          ? `http://localhost:3000/links/${link.id}`
-          : "",
-    }));
-  });
+  const [recentLinks, setRecentLinks] = useState(() =>
+    pickUpTidyData({
+      data: links,
+      orderBy: "decrease",
+      sliceItems: { start: 0, end: 4 },
+    })
+  );
+  const [allLinks, setAllLinks] = useState(() =>
+    pickUpTidyData({
+      data: links,
+      orderBy: "increase",
+    })
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,9 +52,43 @@ const Home = ({ links }: HomeProps) => {
 
   const linksPerPage = slicerLinksPerPage(allLinks, 5, currentPage);
 
-  console.log(linksPerPage);
   function handlePagination(page: number) {
     setCurrentPage(page);
+  }
+
+  function pickUpTidyData({
+    data,
+    orderBy = "increase",
+    sliceItems,
+  }: PickUpTidyDataParams): Array<{ title: string; url: string }> {
+    let linksOrderned: Array<Link>;
+    let linksSliced: Array<Link>;
+
+    linksOrderned = data.sort((a, b) => {
+      return orderBy === "increase"
+        ? new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+        : new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+    });
+
+    if (sliceItems === undefined) {
+      return linksOrderned.map((link) => ({
+        title: link.title,
+        url:
+          process.env.NODE_ENV === "development"
+            ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}links/${link.id}`
+            : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}links/${link.id}`,
+      }));
+    }
+
+    linksSliced = linksOrderned.slice(sliceItems.start, sliceItems.end);
+
+    return linksSliced.map((link) => ({
+      title: link.title,
+      url:
+        process.env.NODE_ENV === "development"
+          ? `${process.env.NEXT_PUBLIC_DEVELOPMENT_URL}links/${link.id}`
+          : `${process.env.NEXT_PUBLIC_PRODUCTION_URL}links/${link.id}`,
+    }));
   }
 
   function slicerLinksPerPage(
@@ -71,24 +103,13 @@ const Home = ({ links }: HomeProps) => {
       startSlice = currentPage * amountLinksPerPage - amountLinksPerPage;
       endSlice = currentPage * amountLinksPerPage;
 
-      console.log(startSlice, endSlice);
-
       return allLinks.slice(startSlice, endSlice);
     }
-
-    // if (allLinks.length % currentPage === 0) {
-    //   startSlice = currentPage * amountLinksPerPage - amountLinksPerPage
-    //   endSlice = currentPage * amountLinksPerPage - 1
-
-    //   return allLinks.slice(startSlice, endSlice);
-    // }
 
     startSlice = (currentPage - 1) * amountLinksPerPage;
     endSlice =
       (currentPage - 1) * amountLinksPerPage +
       (allLinks.length % amountLinksPerPage);
-
-    console.log(startSlice, endSlice, currentPage, amountLinksPerPage);
 
     return allLinks.slice(startSlice, endSlice);
   }
@@ -98,32 +119,20 @@ const Home = ({ links }: HomeProps) => {
       api.get("/links").then((response) => {
         const { data }: ResponseData = response;
 
-        setRecentLinks(() => {
-          return data
-            .sort(
-              (a, b) =>
-                new Date(b.updated_at).getTime() -
-                new Date(a.updated_at).getTime()
-            )
-            .slice(0, 4)
-            .map((link) => ({
-              title: link.title,
-              url:
-                process.env.NODE_ENV === "development"
-                  ? `http://localhost:3000/links/${link.id}`
-                  : "",
-            }));
-        });
+        setRecentLinks(() =>
+          pickUpTidyData({
+            data: data,
+            orderBy: "decrease",
+            sliceItems: { start: 0, end: 4 },
+          })
+        );
 
-        setAllLinks(() => {
-          return data.map((link) => ({
-            title: link.title,
-            url:
-              process.env.NODE_ENV === "development"
-                ? `http://localhost:3000/links/${link.id}`
-                : "",
-          }));
-        });
+        setAllLinks(() =>
+          pickUpTidyData({
+            data: data,
+            orderBy: "increase",
+          })
+        );
       });
     }
   }, [isStaleData]);

@@ -29,8 +29,6 @@ export default function LinkEdit({ link }: LinkEditProps) {
       url: urlField,
     });
 
-    console.log(data);
-
     setDataLink({
       id: link.id,
       title: data.title,
