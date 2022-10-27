@@ -5,11 +5,13 @@ import { Button } from "../Button";
 import { Input } from "../Input";
 import styles from "./modal.module.scss";
 
-interface ModalProps {}
+interface ModalProps {
+  onStaleData: (isStaleData: boolean) => void;
+}
 
 type SubmitState = "In Progress" | "Success" | "Fails" | "Not Submited";
 
-export function Modal({}: ModalProps) {
+export function Modal({ onStaleData }: ModalProps) {
   const titleField = useRef<HTMLInputElement>(null);
   const urlField = useRef<HTMLInputElement>(null);
   const [submitState, setSubmitState] = useState<SubmitState>("Not Submited");
@@ -32,6 +34,7 @@ export function Modal({}: ModalProps) {
 
     try {
       await api.post(`/links`, data).then(() => setSubmitState("Success"));
+      onStaleData(true);
       onClose();
     } catch (err) {
       setSubmitState("Fails");

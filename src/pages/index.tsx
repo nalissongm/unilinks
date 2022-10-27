@@ -22,6 +22,7 @@ type ResponseData = {
 };
 
 const Home = ({ links }: HomeProps) => {
+  const [isStaleData, setIsStaleData] = useState(false);
   const [recentLinks, setRecentLinks] = useState(() => {
     return links
       .sort(
@@ -47,15 +48,93 @@ const Home = ({ links }: HomeProps) => {
     }));
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { isOpen, onOpen } = useDisclosure();
 
-  console.log(recentLinks);
+  const linksPerPage = slicerLinksPerPage(allLinks, 5, currentPage);
 
-  function handlePagination() {}
+  console.log(linksPerPage);
+  function handlePagination(page: number) {
+    setCurrentPage(page);
+  }
+
+  function slicerLinksPerPage(
+    allLinks: { title: string; url: string }[],
+    amountLinksPerPage: number,
+    currentPage: number
+  ) {
+    let startSlice: number;
+    let endSlice: number;
+
+    if (currentPage <= allLinks.length / amountLinksPerPage) {
+      startSlice = currentPage * amountLinksPerPage - amountLinksPerPage;
+      endSlice = currentPage * amountLinksPerPage;
+
+      console.log(startSlice, endSlice);
+
+      return allLinks.slice(startSlice, endSlice);
+    }
+
+    // if (allLinks.length % currentPage === 0) {
+    //   startSlice = currentPage * amountLinksPerPage - amountLinksPerPage
+    //   endSlice = currentPage * amountLinksPerPage - 1
+
+    //   return allLinks.slice(startSlice, endSlice);
+    // }
+
+    startSlice = (currentPage - 1) * amountLinksPerPage;
+    endSlice =
+      (currentPage - 1) * amountLinksPerPage +
+      (allLinks.length % amountLinksPerPage);
+
+    console.log(startSlice, endSlice, currentPage, amountLinksPerPage);
+
+    return allLinks.slice(startSlice, endSlice);
+  }
+
+  useEffect(() => {
+    if (isStaleData) {
+      api.get("/links").then((response) => {
+        const { data }: ResponseData = response;
+
+        setRecentLinks(() => {
+          return data
+            .sort(
+              (a, b) =>
+                new Date(b.updated_at).getTime() -
+                new Date(a.updated_at).getTime()
+            )
+            .slice(0, 4)
+            .map((link) => ({
+              title: link.title,
+              url:
+                process.env.NODE_ENV === "development"
+                  ? `http://localhost:3000/links/${link.id}`
+                  : "",
+            }));
+        });
+
+        setAllLinks(() => {
+          return data.map((link) => ({
+            title: link.title,
+            url:
+              process.env.NODE_ENV === "development"
+                ? `http://localhost:3000/links/${link.id}`
+                : "",
+          }));
+        });
+      });
+    }
+  }, [isStaleData]);
 
   return (
     <>
-      {isOpen && <Modal />}
+      {isOpen && (
+        <Modal
+          onStaleData={(isStaleData: boolean) => setIsStaleData(isStaleData)}
+        />
+      )}
       <div className="content">
         <header>
           <h1>Dashboard</h1>
@@ -68,12 +147,13 @@ const Home = ({ links }: HomeProps) => {
           </div>
           <div>
             <h2>Todos os links</h2>
-            <LinkList links={allLinks} />
+            <LinkList links={linksPerPage} />
             {links.length > 5 && (
               <Pagination
                 totalCountOfRegisters={links.length}
                 registerPerPage={5}
                 onPageChange={handlePagination}
+                currentPage={currentPage}
               />
             )}
           </div>
