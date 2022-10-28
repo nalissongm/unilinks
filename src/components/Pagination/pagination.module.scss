@@ -22,6 +22,11 @@
   & > button {
     gap: 6px;
     padding: 7px 14px;
+
+    &:disabled {
+      cursor: auto;
+      opacity: .4;
+    }
   }
 
   div {
